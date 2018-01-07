@@ -1,0 +1,33 @@
+SET ThousandSep=' ';
+SET DecimalSep=',';
+SET MoneyThousandSep=' ';
+SET MoneyDecimalSep=',';
+SET MoneyFormat='# ##0,00 ₽;-# ##0,00 ₽';
+SET TimeFormat='h:mm:ss';
+SET DateFormat='DD.MM.YYYY';
+SET TimestampFormat='DD.MM.YYYY h:mm:ss[.fff]';
+SET FirstWeekDay=0;
+SET BrokenWeeks=1;
+SET ReferenceDay=0;
+SET FirstMonthOfYear=1;
+SET CollationLocale='ru-RU';
+SET CreateSearchIndexOnReload=1;
+SET MonthNames='янв;фев;мар;апр;май;июн;июл;авг;сен;окт;ноя;дек';
+SET LongMonthNames='Январь;Февраль;Март;Апрель;Май;Июнь;Июль;Август;Сентябрь;Октябрь;Ноябрь;Декабрь';
+SET DayNames='Пн;Вт;Ср;Чт;Пт;Сб;Вс';
+SET LongDayNames='понедельник;вторник;среда;четверг;пятница;суббота;воскресенье';
+
+let user = OSUser();
+let collect_ts = Now();
+report:
+Load * Inline [
+	'user', 'collect_ts', 'report_dt', 'report_type'
+    $(user), $(collect_ts), %REPORT_DT%, %REPORT_TYPE%
+];
+join (report)
+Load * Inline [
+'project_name', 'task', 'jira_url'
+%INLINE_DATA%
+];
+
+store report into %QVD_PATH% (qvd);

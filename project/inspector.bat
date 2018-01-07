@@ -1,0 +1,1 @@
+node node_modules/node-inspector/bin/inspector.js --debug-port=7000 --save-live-edit
